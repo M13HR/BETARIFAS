@@ -12,9 +12,9 @@
         h2 { color: #25d366; margin: 0 0 20px; font-size: 22px; }
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; height: 250px; overflow-y: auto; background: #111; padding: 10px; border-radius: 15px; border: 1px solid #333; margin: 15px 0; }
         .num { padding: 12px 0; background: #333; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; color: #bbb; border: 1px solid transparent; }
-        .num.selected { background: #25d366; color: black; border-color: white; }
+        .num.selected { background: #25d366 !important; color: black !important; border-color: white !important; }
         .num.occupied { background: #444; color: #666; cursor: not-allowed; opacity: 0.3; }
-        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
+        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; font-size: 16px; }
         .btn { background: #25d366; color: black; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .p-card { display: flex; justify-content: space-between; padding: 12px; background: #222; border-radius: 12px; border: 1px solid #333; margin-bottom: 5px; }
         .best { border: 2px solid #25d366; background: linear-gradient(145deg, #1a1a1a, #142e1f); }
@@ -24,26 +24,18 @@
     <div class="app">
         <div class="logo"><img src="https://i.postimg.cc/tTrzGvdX/tecuan_png.png"></div>
         <h2>BETARIFAS</h2>
-        
         <input type="number" id="search" placeholder="🔍 Buscar número..." oninput="buscar()">
-        
         <div id="grid" class="grid">Cargando números...</div>
-
         <div class="p-card"><span>1 Boleto</span><b>$75</b></div>
         <div class="p-card best"><span>5 Boletos (1 Gratis)</span><b>$300</b></div>
-
         <input type="text" id="nombre" placeholder="Tu Nombre">
         <input type="number" id="whatsapp" placeholder="Tu WhatsApp">
-        
         <div id="sel" style="color:#25d366; font-weight:bold; margin:10px 0;">Seleccionados: 0</div>
-        
         <button id="btn" class="btn" onclick="enviar()">APARTAR AHORA 🚀</button>
     </div>
 
     <script>
-        // --- PEGA TU URL DE GOOGLE ABAJO ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb6rDJ3CyBYq92gBbHotp3jyow5k-LPK0FZZopI0-0vTVdj_a17kJf30ZQ1GD2AlZl_A/exec"; 
-        // -----------------------------------
 
         let seleccionados = [];
 
@@ -63,7 +55,7 @@
                     grid.appendChild(div);
                 }
             } catch (e) {
-                document.getElementById('grid').innerText = "Error al conectar con Google. Revisa tu Link Exec.";
+                document.getElementById('grid').innerText = "Error al conectar. Recarga la página.";
             }
         }
 
@@ -82,27 +74,37 @@
             let v = document.getElementById('search').value;
             if(v.length < 1) return;
             let n = v.padStart(3, '0').slice(-3);
-            document.getElementById("n-"+n)?.scrollIntoView({behavior:'smooth', block:'center'});
+            const el = document.getElementById("n-"+n);
+            if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
         }
 
         async function enviar() {
             const n = document.getElementById('nombre').value;
             const w = document.getElementById('whatsapp').value;
-            if(!n || !w || seleccionados.length === 0) return alert("Faltan datos");
+            if(!n || !w || seleccionados.length === 0) return alert("Faltan datos o números por seleccionar.");
 
             const b = document.getElementById('btn');
             b.disabled = true; b.innerText = "REGISTRANDO...";
 
             try {
-                const res = await fetch(SCRIPT_URL, {
+                const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // Importante para evitar errores de seguridad
+                    cache: 'no-cache',
                     body: JSON.stringify({nombre:n, whatsapp:w, boletos: seleccionados.join(', ')})
                 });
-                const data = await res.json();
-                alert("✅ ¡REGISTRO EXITOSO!");
-                window.top.location.href = data.url;
+                
+                // Como usamos no-cors no podemos leer la respuesta, así que disparamos el WhatsApp manualmente
+                alert("✅ ¡REGISTRO ENVIADO!\nTe redirigiremos a WhatsApp para confirmar.");
+                
+                let cantidad = seleccionados.length;
+                let total = (cantidad === 1) ? 75 : (cantidad === 3) ? 200 : (cantidad === 5) ? 300 : cantidad * 60;
+                let msj = `🎫 *NUEVO APARTADO*\n👤 *Cliente:* ${n}\n🔢 *Boletos:* ${seleccionados.join(', ')}\n💰 *Total:* $${total} MXN`;
+                
+                window.top.location.href = `https://api.whatsapp.com/send?phone=529531024519&text=${encodeURIComponent(msj)}`;
+                
             } catch (e) {
-                alert("Error al guardar. Revisa el script.");
+                alert("Error al enviar. Intenta de nuevo.");
                 b.disabled = false; b.innerText = "APARTAR AHORA 🚀";
             }
         }
