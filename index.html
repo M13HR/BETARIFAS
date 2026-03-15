@@ -48,7 +48,7 @@
 
         <input type="number" id="search" placeholder="🔍 BUSCAR NÚMERO..." style="width:90%; margin:10px auto;">
 
-        <div id="grid" class="grid">Cargando...</div>
+        <div id="grid" class="grid">Cargando boletos...</div>
 
         <div class="input-group">
             <input type="text" id="nombre" placeholder="Nombre completo">
@@ -114,7 +114,7 @@
             const est = document.getElementById('estadoRep').value;
             const mun = document.getElementById('municipio').value;
 
-            if(!n || !w || !est || !mun || seleccionados.length === 0) return alert("Completa todos los campos.");
+            if(!n || !w || !est || !mun || seleccionados.length === 0) return alert("Por favor, llena todos los campos.");
             
             const b = document.getElementById('btn');
             b.innerText = "PROCESANDO..."; b.disabled = true;
@@ -125,15 +125,29 @@
                 body: JSON.stringify({ nombre:n, whatsapp:w, boletos: seleccionados.join(', '), estadoRep: est, municipio: mun }) 
             });
             
+            const total = calcularTotal(seleccionados.length);
+
             setTimeout(() => {
-                const msj = `📱 *RIFAS EL TECUAN*\n👤 *CLIENTE:* ${n}\n📍 *ORIGEN:* ${mun}, ${est}\n🔢 *BOLETOS:* ${seleccionados.join(', ')}\n💰 *TOTAL:* $${calcularTotal(seleccionados.length)} MXN`;
+                const msj = `📱 *RIFAS EL TECUAN - APARTADO OFICIAL* 🐯\n\n` +
+                            `¡Hola! He seleccionado mis números de la suerte:\n\n` +
+                            `👤 *NOMBRE:* ${n}\n` +
+                            `📍 *ORIGEN:* ${mun}, ${est}\n` +
+                            `🔢 *BOLETOS:* ${seleccionados.join(', ')}\n` +
+                            `💰 *TOTAL A PAGAR:* $${total} MXN\n\n` +
+                            `--- \n` +
+                            `⚠️ *IMPORTANTE:*\n` +
+                            `* Tengo *6 HORAS* para enviar mi comprobante de pago.\n` +
+                            `* Pasado este tiempo, el sistema liberará mis números automáticamente.\n` +
+                            `* Participo por el *iPhone 17 Pro Max* y el *Pre-evento de $5,000*.\n\n` +
+                            `*¿A qué cuenta puedo realizar mi depósito o transferencia?* 🍀`;
+
                 window.top.location.href = `https://api.whatsapp.com/send?phone=529531024519&text=${encodeURIComponent(msj)}`;
             }, 1000);
         }
 
         document.getElementById('search').oninput = function() {
-            let n = this.value.padStart(3, '0').slice(-3);
-            document.getElementById("n-"+n)?.scrollIntoView({behavior:'smooth', block:'center'});
+            let val = this.value.padStart(3, '0').slice(-3);
+            document.getElementById("n-"+val)?.scrollIntoView({behavior:'smooth', block:'center'});
         };
         cargar();
     </script>
