@@ -3,70 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rifas El Tecuan - Oficial</title>
+    <title>Rifas El Tecuan - iPhone 17</title>
     <style>
-        :root { --primary: #25d366; --gold: #ffd700; --bg: #0a0a0a; --card: #161616; }
+        :root { --primary: #25d366; --gold: #ffd700; --apartado: #f39c12; --pagado: #e74c3c; --bg: #0a0a0a; --card: #161616; }
         body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: white; margin: 0; padding: 10px; display: flex; justify-content: center; }
         .app { width: 100%; max-width: 500px; background: var(--card); padding: 0; border-radius: 30px; border: 1px solid #333; overflow: hidden; text-align: center; padding-bottom: 350px; }
         
-        /* BANNER IMPACTANTE (Inspirado en Rifas Tabasco) */
+        /* HEADER IMPACTANTE */
         .hero { background: linear-gradient(180deg, #1b4d2b 0%, #0a0a0a 100%); padding: 30px 20px; border-bottom: 4px solid var(--primary); }
-        .hero h1 { color: var(--gold); font-size: 32px; margin: 0; text-shadow: 2px 2px #000; }
-        .hero h2 { color: white; font-size: 24px; margin: 10px 0; }
-        .hero .price-badge { background: var(--gold); color: black; display: inline-block; padding: 5px 15px; border-radius: 50px; font-size: 20px; font-weight: bold; margin-top: 10px; }
+        .hero h1 { color: var(--gold); font-size: 28px; margin: 0; text-shadow: 2px 2px #000; }
+        .hero h2 { color: white; font-size: 22px; margin: 10px 0; }
+        .hero .price-badge { background: var(--gold); color: black; display: inline-block; padding: 5px 15px; border-radius: 50px; font-size: 18px; font-weight: bold; }
 
         /* SECCIÓN QUIÉNES SOMOS */
-        .about { padding: 20px; font-size: 14px; background: white; color: black; margin: 15px; border-radius: 15px; font-family: 'Segoe UI', sans-serif; }
+        .about { padding: 15px; font-size: 13px; background: white; color: black; margin: 15px; border-radius: 15px; font-family: 'Segoe UI', sans-serif; }
 
-        /* PLAN DE PREMIOS (Iconos) */
-        .premios { padding: 15px; background: #222; margin: 15px; border-radius: 15px; border: 1px dashed var(--gold); }
-        .premio-item { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        /* PLAN DE PREMIOS REFORMULADO */
+        .premios { padding: 15px; background: #222; margin: 15px; border-radius: 15px; border: 1px dashed var(--gold); text-align: left; }
+        .premio-title { color: var(--gold); font-size: 16px; margin-bottom: 10px; text-align: center; display: block; }
+        .premio-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333; }
+        .premio-item:last-child { border: none; }
 
-        .leyenda { display: flex; justify-content: space-around; font-size: 11px; margin: 15px; background: #222; padding: 10px; border-radius: 10px; }
+        /* LEYENDA Y COMBOS */
+        .leyenda { display: flex; justify-content: space-around; font-size: 11px; margin: 10px 15px; background: #222; padding: 10px; border-radius: 10px; }
         .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 5px; }
+        
+        .combos-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px; }
+        .combo-box { background: #222; padding: 10px 5px; border-radius: 12px; border: 1px solid #444; font-size: 11px; }
+        .combo-box b { display: block; color: var(--primary); font-size: 15px; }
 
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; height: 280px; overflow-y: auto; background: #000; padding: 15px; border-radius: 15px; margin: 15px; border: 1px solid #444; }
+        /* TABLERO Y BUSCADOR */
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; height: 260px; overflow-y: auto; background: #000; padding: 15px; border-radius: 15px; margin: 15px; border: 1px solid #444; }
         .num { padding: 12px 0; background: #2a2a2a; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; color: #ddd; }
         .num.selected { background: var(--primary) !important; color: black !important; }
-        .num.apartado { background: #f39c12; color: white; cursor: not-allowed; }
-        .num.pagado { background: #e74c3c; color: white; cursor: not-allowed; text-decoration: line-through; opacity: 0.5; }
+        .num.apartado { background: var(--apartado); color: white; cursor: not-allowed; }
+        .num.pagado { background: var(--pagado); color: white; cursor: not-allowed; text-decoration: line-through; opacity: 0.5; }
 
+        /* FORMULARIO */
         .input-group { padding: 0 15px; }
         input { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; font-size: 16px; }
+        .btn-apartar { background: var(--primary); color: black; border: none; padding: 20px; width: 90%; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         
-        .btn-apartar { background: var(--primary); color: black; border: none; padding: 20px; width: 90%; border-radius: 15px; font-size: 20px; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
-        
-        .footer-info { font-family: 'Segoe UI', sans-serif; font-size: 13px; color: #aaa; padding: 20px; text-align: left; }
+        .footer-info { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #aaa; padding: 20px; text-align: left; line-height: 1.6; }
+        .footer-info b { color: white; }
     </style>
 </head>
 <body>
     <div class="app">
         <div class="hero">
-            <h1>EDICIÓN IPHONE 17</h1>
-            <h2>SUPER EXPRESS 🐯</h2>
-            <div class="price-badge">POR SOLO $75 MXN</div>
+            <h1>IPHONE 17 PRO MAX</h1>
+            <h2>EDICIÓN TECUAN 🐯</h2>
+            <div class="price-badge">BOLETO $75 MXN</div>
         </div>
 
         <div class="about">
-            <h3 style="margin:0; color:#1b4d2b;">RIFAS EL TECUAN</h3>
-            Eventos confiables y accesibles conforme a la Lotería Nacional. ¡Arriesga poco y gana mucho!
+            <h3 style="margin:0; color:#1b4d2b; font-size:16px;">RIFAS EL TECUAN</h3>
+            Eventos confiables basados en Lotería Nacional. ¡Tu suerte comienza aquí!
         </div>
 
         <div class="premios">
-            <h4 style="margin:0 0 10px 0; color:var(--gold);">🏆 PLAN DE PREMIOS</h4>
-            <div class="premio-item"><span>🥇 1er Lugar</span><b style="color:var(--primary)">IPHONE 17 PRO MAX</b></div>
-            <div class="premio-item"><span>➕ Bono Especial</span><b style="color:var(--primary)">$2,000 MXN</b></div>
-            <div class="premio-item"><span>🥈 2do Lugar</span><b>AUDÍFONOS PRO</b></div>
+            <b class="premio-title">🏆 PLAN DE PREMIOS</b>
+            <div class="premio-item">
+                <span>🥇 <b>PREMIO MAYOR</b></span>
+                <b style="color:var(--primary)">IPHONE 17 PRO MAX</b>
+            </div>
+            <div class="premio-item">
+                <span>⚡ <b>PRE-EVENTO (50% VENTA)</b></span>
+                <b style="color:var(--gold)">$5,000 MXN</b>
+            </div>
+            <div class="premio-item">
+                <span>🎁 <b>BONO PRONTO PAGO</b></span>
+                <b style="color:var(--primary)">$2,000 MXN</b>
+            </div>
+        </div>
+
+        <div class="combos-container">
+            <div class="combo-box">1 Boleto<b>$75</b></div>
+            <div class="combo-box" style="border-color:var(--gold)">3 Boletos<b>$200</b></div>
+            <div class="combo-box">5 Boletos<b>$300</b></div>
         </div>
 
         <div class="leyenda">
             <span><div class="dot" style="background:#2a2a2a"></div>Libre</span>
-            <span><div class="dot" style="background:#f39c12"></div>Apartado</span>
-            <span><div class="dot" style="background:#e74c3c"></div>Pagado</span>
+            <span><div class="dot" style="background:var(--apartado)"></div>Apartado</span>
+            <span><div class="dot" style="background:var(--pagado)"></div>Pagado</span>
         </div>
 
         <div class="input-group">
-            <input type="number" id="search" placeholder="🔍 BUSCAR MI NÚMERO DE LA SUERTE...">
+            <input type="number" id="search" placeholder="🔍 BUSCAR NÚMERO...">
         </div>
 
         <div id="grid" class="grid">Cargando tablero...</div>
@@ -76,17 +100,19 @@
             <input type="number" id="whatsapp" placeholder="WhatsApp (10 dígitos)" onfocus="this.scrollIntoView({behavior:'smooth', block:'center'})">
         </div>
 
-        <button id="btn" class="btn-apartar" onclick="enviar()">¡COMPRAR BOLETO! 🍀</button>
+        <button id="btn" class="btn-apartar" onclick="enviar()">¡APARTAR MI SUERTE! 🍀</button>
 
         <div class="footer-info">
-            📍 <b>UBICADOS EN:</b> Huajuapan de León, Oaxaca.<br><br>
-            ⚠️ <b>IMPORTANTE:</b> Sorteo sujeto al 80% de boletos vendidos. Jugamos con los últimos 3 dígitos de la Lotería Nacional.<br><br>
-            ⏳ <b>TIEMPO DE PAGO:</b> Tienes 12 horas para reportar tu pago.
+            📍 <b>UBICACIÓN:</b> Acatlán de Osorio, Puebla.<br>
+            📅 <b>FECHA SORTEO:</b> 14 de Abril (Sujeto al 80% de venta).<br>
+            🎰 <b>MÉTODO:</b> Últimas 3 cifras del Premio Mayor Lotería Nacional.<br>
+            🔥 <b>DINÁMICA PRE-EVENTO:</b> Al llegar al <b>50% de boletos vendidos</b>, se rifarán <b>$5,000 MXN</b> en efectivo.<br>
+            ⏳ <b>TIEMPO DE PAGO:</b> Tienes <b>6 horas</b> para reportar tu comprobante.
         </div>
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb6rDJ3CyBYq92gBbHotp3jyow5k-LPK0FZZopI0-0vTVdj_a17kJf30ZQ1GD2AlZl_A/exec"; 
+        const SCRIPT_URL = "TU_URL_DE_GOOGLE_SCRIPT"; 
         let seleccionados = [];
 
         async function cargar() {
@@ -117,15 +143,26 @@
             document.getElementById("n-"+n)?.scrollIntoView({behavior:'smooth', block:'center'});
         };
 
+        function calcularTotal(cant) {
+            let t = 0, c = cant;
+            while(c > 0) {
+                if(c >= 5) { t += 300; c -= 5; }
+                else if(c >= 3) { t += 200; c -= 3; }
+                else { t += (c * 75); c = 0; }
+            }
+            return t;
+        }
+
         async function enviar() {
             const n = document.getElementById('nombre').value;
             const w = document.getElementById('whatsapp').value;
-            if(!n || !w || seleccionados.length === 0) return alert("Por favor completa tus datos.");
+            if(!n || !w || seleccionados.length === 0) return alert("Completa tus datos.");
             const b = document.getElementById('btn');
-            b.innerText = "REGISTRANDO..."; b.disabled = true;
+            b.innerText = "PROCESANDO..."; b.disabled = true;
             fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({nombre:n, whatsapp:w, boletos: seleccionados.join(', ')}) });
+            const total = calcularTotal(seleccionados.length);
             setTimeout(() => {
-                const msj = `📱 *RIFAS EL TECUAN*\n👤 *Cliente:* ${n}\n🔢 *Boletos:* ${seleccionados.join(', ')}\n\n🐯 ¡Mucha suerte Tecuan!`;
+                const msj = `📱 *RIFAS EL TECUAN*\n👤 *Cliente:* ${n}\n🔢 *Boletos:* ${seleccionados.join(', ')}\n💰 *Total:* $${total} MXN\n\n🐯 ¡Mucha suerte Tecuan!`;
                 window.top.location.href = `https://api.whatsapp.com/send?phone=529531024519&text=${encodeURIComponent(msj)}`;
             }, 1000);
         }
