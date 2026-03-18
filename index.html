@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rifas El Tecuan | Sorteo iPhone 17 Pro Max</title>
+    <title>Rifas El Tecuan | iPhone 17 Pro Max</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --verde-tecuan: #00C853;
             --oro: #FFD700;
             --negro-fondo: #121212;
-            --blanco: #F5F5F5;
+            --gris-oscuro: #1e1e1e;
+            --blanco: #f5f5f5;
         }
 
         body {
@@ -18,92 +19,90 @@
             background-color: var(--negro-fondo);
             color: var(--blanco);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             text-align: center;
         }
 
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-        }
+        .container { max-width: 600px; margin: 0 auto; padding-bottom: 50px; }
 
-        /* Ajuste de Imágenes con tus nombres de archivo */
-        .logo-principal {
-            width: 100%;
-            max-width: 250px;
-            margin-bottom: 20px;
-        }
+        /* Imágenes del Header */
+        .logo-principal { width: 180px; margin: 20px auto; display: block; }
+        .iphone-banner { width: 100%; border-radius: 15px; border: 1px solid var(--verde-tecuan); margin-bottom: 20px; }
 
-        .iphone-foto {
-            width: 100%;
-            max-width: 350px;
+        .precio-badge { background: var(--oro); color: black; padding: 5px 20px; border-radius: 50px; font-weight: bold; display: inline-block; margin-bottom: 20px; }
+
+        /* Cuadro de Premios */
+        .premios-box {
+            background: var(--gris-oscuro);
+            border: 1px dashed var(--oro);
+            padding: 15px;
             border-radius: 15px;
-            margin: 20px 0;
-            border: 2px solid var(--verde-tecuan);
-            box-shadow: 0 0 20px rgba(0, 200, 83, 0.3);
+            text-align: left;
+            margin: 10px;
         }
 
-        h1 { color: var(--oro); font-size: 1.8em; margin-bottom: 5px; }
-        .precio { background: var(--oro); color: black; display: inline-block; padding: 5px 15px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; }
-
-        .premios {
-            text-align: left;
-            background: rgba(0, 0, 0, 0.3);
+        /* Buscador */
+        .search-container { margin: 20px 10px; }
+        #search-input {
+            width: 100%;
             padding: 15px;
             border-radius: 10px;
-            border-left: 4px solid var(--verde-tecuan);
-            margin-bottom: 20px;
+            border: 1px solid var(--verde-tecuan);
+            background: #000;
+            color: white;
+            font-size: 1.1em;
+            box-sizing: border-box;
         }
 
-        .premio-row { margin: 10px 0; display: flex; justify-content: space-between; }
-        .verde { color: var(--verde-tecuan); font-weight: bold; }
+        /* Cuadrícula de Números */
+        .numeros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 8px;
+            margin: 20px 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #000;
+            padding: 15px;
+            border-radius: 10px;
+        }
 
-        .boton-apartar {
-            display: block;
+        .numero {
+            background: #333;
+            padding: 12px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .numero.selected { background: var(--verde-tecuan); color: white; transform: scale(1.1); }
+        .numero.hidden { display: none; }
+
+        /* Formulario */
+        .form-container { background: var(--gris-oscuro); padding: 20px; border-radius: 15px; margin: 20px 10px; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #121212;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .btn-apartar {
             background: var(--verde-tecuan);
             color: white;
-            text-decoration: none;
-            padding: 20px;
-            border-radius: 15px;
-            font-size: 1.2em;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 1.3em;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 200, 83, 0.4);
-            margin-top: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4);
         }
 
-        .footer-info { font-size: 0.8em; margin-top: 20px; opacity: 0.7; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <img src="Logo Rifas el tecuan.png" alt="Rifas El Tecuan" class="logo-principal">
-
-        <h1>IPHONE 17 PRO MAX</h1>
-        <div class="precio">BOLETO $75 MXN</div>
-
-        <img src="Para rifas 17 Pro Max.jpeg" alt="iPhone 17 Pro Max" class="iphone-foto">
-
-        <div class="premios">
-            <div class="premio-row"><span>🥇 MAYOR</span> <span class="verde">IPHONE 17 PRO MAX</span></div>
-            <div class="premio-row"><span>⚡ PRE-EVENTO (50%)</span> <span style="color:var(--oro)">$5,000 MXN</span></div>
-            <div class="premio-row"><span>🎁 PRONTO PAGO</span> <span class="verde">$2,000 MXN</span></div>
-        </div>
-
-        <a href="https://wa.me/522751035579?text=Hola%20Miguel,%20quiero%20apartar%20mi%20boleto%20para%20el%20iPhone" class="boton-apartar">
-            ¡APARTAR MI SUERTE! 🍀
-        </a>
-
-        <div class="footer-info">
-            <p>📍 UBICACIÓN: Acatlán de Osorio, Puebla.</p>
-            <p>🗓️ SORTEO: 14 de Abril (Lotería Nacional).</p>
-            <p>⏳ PAGO: Tienes 6 horas para reportar.</p>
-        </div>
-    </div>
-
-</body>
-</html>
+        .footer-text { font-size: 0.8em; opacity:
