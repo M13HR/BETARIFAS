@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rifas El Tecuan</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #25d366; --gold: #ffd700; --apartado: #f39c12; --pagado: #e74c3c; --bg: #0a0a0a; --card: #161616; }
         body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: white; margin: 0; padding: 10px; display: flex; justify-content: center; }
@@ -16,18 +17,25 @@
         
         .promo-img { width: 90%; border-radius: 20px; margin: 15px auto; border: 1px solid #444; display: block; }
 
+        .premios { padding: 15px; background: #222; margin: 15px; border-radius: 15px; border: 1px dashed var(--gold); text-align: left; }
+        .premio-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
+        
+        .combos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px; }
+        .combo-box { background: #222; padding: 10px; border-radius: 12px; border: 1px solid #444; font-size: 11px; cursor: pointer; transition: 0.2s; }
+        .combo-box:active { transform: scale(0.95); background: #333; }
+        .combo-box b { display: block; color: var(--primary); font-size: 15px; }
+        .combo-box small { color: var(--gold); font-size: 9px; }
+
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; height: 260px; overflow-y: auto; background: #000; padding: 15px; border-radius: 15px; margin: 15px; border: 1px solid #222; }
         .num { padding: 12px 0; background: #2a2a2a; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .num.selected { background: var(--primary) !important; color: black !important; transform: scale(1.05); }
+        .num.selected { background: var(--primary) !important; color: black !important; }
         .num.apartado { background: var(--apartado); color: white; cursor: not-allowed; }
         .num.pagado { background: var(--pagado); color: white; cursor: not-allowed; opacity: 0.5; }
         
-        /* SECCIÓN PASO 2: OCULTA POR DEFECTO */
         #seccion-datos { display: none; padding: 0 15px; text-align: left; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .contador-flotante { color: var(--primary); font-size: 18px; text-align: center; margin-bottom: 15px; font-weight: bold; }
-        input, select { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; font-size: 16px; font-family: sans-serif; }
+        input, select { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; font-size: 16px; }
         .btn-apartar { background: var(--primary); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin: 10px 0; }
         .footer-info { font-family: sans-serif; font-size: 12px; color: #aaa; padding: 20px; text-align: left; line-height: 1.6; }
     </style>
@@ -42,26 +50,34 @@
 
         <img src="Para rifas 17 Pro Max.jpeg" class="promo-img" alt="Sorteo">
 
-        <h2 id="instruccion" style="font-size: 18px; color: var(--gold); margin-top: 20px;">1. TOCA TUS NÚMEROS DE LA SUERTE</h2>
+        <div class="premios">
+            <div class="premio-item"><span>🥇 <b>MAYOR</b></span><b style="color:var(--primary)">IPHONE 17 PRO MAX</b></div>
+            <div class="premio-item"><span>⚡ <b>PRE-EVENTO (50%)</b></span><b style="color:var(--gold)">$5,000 MXN</b></div>
+            <div class="premio-item"><span>🎁 <b>BONO PRONTO PAGO</b></span><b style="color:var(--primary)">$2,000 MXN</b></div>
+            <p style="font-size: 10px; color: #aaa; margin-top: 5px; text-align: center;">
+                ⚠️ Bono de $2,000 válido pagando en las primeras <b>2 HORAS</b>.
+            </p>
+        </div>
+
+        <div class="combos">
+            <div class="combo-box" onclick="maquinaSuerte(1)">1 Boleto<b>$75</b><small>🎰 SUERTE</small></div>
+            <div class="combo-box" style="border-color:var(--gold)" onclick="maquinaSuerte(3)">3 Boletos<b>$200</b><small>🔥 POPULAR</small></div>
+            <div class="combo-box" onclick="maquinaSuerte(5)">5 Boletos<b>$300</b><small>🚀 SÚPER</small></div>
+        </div>
 
         <input type="number" id="search" placeholder="🔍 BUSCAR NÚMERO..." style="width:90%; margin:10px auto; padding: 12px; border-radius: 10px; background: #111; color: white; border: 1px solid #333;">
 
         <div id="grid" class="grid">Cargando boletos...</div>
 
         <div id="seccion-datos">
-            <div class="contador-flotante" id="msg-seleccion">Has seleccionado: 0 boletos</div>
-            
-            <h2 style="font-size: 18px; color: var(--gold);">2. REGISTRA TU APARTADO</h2>
+            <div id="msg-seleccion" style="color: var(--primary); text-align: center; font-weight: bold; margin-bottom: 10px;"></div>
             <input type="text" id="nombre" placeholder="Nombre completo">
             <input type="number" id="whatsapp" placeholder="WhatsApp (10 dígitos)">
-            
             <input list="estadosLista" id="estadoRep" placeholder="Selecciona tu Estado">
             <datalist id="estadosLista">
                 <option value="Puebla"><option value="Oaxaca"><option value="CDMX"><option value="Veracruz"><option value="Guerrero">
             </datalist>
-
             <input type="text" id="municipio" placeholder="¿De qué municipio nos visitas?">
-            
             <button id="btn" class="btn-apartar" onclick="enviar()">¡APARTAR MI SUERTE! 🍀</button>
         </div>
 
@@ -101,31 +117,44 @@
                 seleccionados.push(n); 
                 el.classList.add('selected'); 
             }
-            
-            // Lógica para mostrar/ocultar el formulario
-            const seccion = document.getElementById('seccion-datos');
-            const instruccion = document.getElementById('instruccion');
-            const msg = document.getElementById('msg-seleccion');
-
-            if(seleccionados.length > 0) {
-                seccion.style.display = 'block';
-                instruccion.style.display = 'none';
-                msg.innerText = `Has seleccionado: ${seleccionados.length} boleto(s) (${seleccionados.join(', ')})`;
-                if(seleccionados.length === 1) seccion.scrollIntoView({behavior:'smooth'});
-            } else {
-                seccion.style.display = 'none';
-                instruccion.style.display = 'block';
-            }
+            actualizarInterfaz();
         }
 
-        function calcularTotal(cant) {
-            let t = 0, c = cant;
-            while(c > 0) {
-                if(c >= 5) { t += 300; c -= 5; }
-                else if(c >= 3) { t += 200; c -= 3; }
-                else { t += (c * 75); c = 0; }
+        function maquinaSuerte(cantidad) {
+            // Sonido Casino
+            const context = new AudioContext();
+            const osc = context.createOscillator();
+            const gain = context.createGain();
+            osc.connect(gain); gain.connect(context.destination);
+            osc.frequency.value = 880; gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+            osc.start(); osc.stop(context.currentTime + 0.5);
+
+            const disponibles = Array.from(document.querySelectorAll('.num:not(.apartado):not(.pagado)'));
+            if (disponibles.length < cantidad) return alert("No hay suficientes números.");
+            
+            seleccionados = [];
+            document.querySelectorAll('.num.selected').forEach(el => el.classList.remove('selected'));
+
+            for (let i = 0; i < cantidad; i++) {
+                const randomIdx = Math.floor(Math.random() * disponibles.length);
+                const el = disponibles.splice(randomIdx, 1)[0];
+                const n = el.innerText;
+                el.classList.add('selected');
+                seleccionados.push(n);
             }
-            return t;
+
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#25d366', '#ffd700'] });
+            actualizarInterfaz();
+            document.getElementById('seccion-datos').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function actualizarInterfaz() {
+            const seccion = document.getElementById('seccion-datos');
+            const msg = document.getElementById('msg-seleccion');
+            if(seleccionados.length > 0) {
+                seccion.style.display = 'block';
+                msg.innerText = `🎰 Llevas: ${seleccionados.length} números (${seleccionados.join(', ')})`;
+            } else { seccion.style.display = 'none'; }
         }
 
         async function enviar() {
@@ -134,26 +163,23 @@
             const est = document.getElementById('estadoRep').value;
             const mun = document.getElementById('municipio').value;
 
-            if(!n || !w || !est || !mun) return alert("Por favor, llena todos tus datos.");
+            if(!n || !w || !est || !mun) return alert("Llena tus datos.");
             
             const b = document.getElementById('btn');
             b.innerText = "PROCESANDO..."; b.disabled = true;
 
-            fetch(SCRIPT_URL, { 
-                method: 'POST', mode: 'no-cors', 
-                body: JSON.stringify({ nombre:n, whatsapp:w, boletos: seleccionados.join(', '), estadoRep: est, municipio: mun }) 
-            });
+            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ nombre:n, whatsapp:w, boletos: seleccionados.join(', '), estadoRep: est, municipio: mun }) });
             
-            const total = calcularTotal(seleccionados.length);
+            let total = seleccionados.length * 75; // Cálculo simple para el mensaje
+            if(seleccionados.length === 3) total = 200;
+            if(seleccionados.length === 5) total = 300;
 
             setTimeout(() => {
                 const msj = `📱 *RIFAS EL TECUAN* 🐯\n\n` +
                             `👤 *NOMBRE:* ${n}\n` +
-                            `📍 *ORIGEN:* ${mun}, ${est}\n` +
                             `🔢 *BOLETOS:* ${seleccionados.join(', ')}\n` +
                             `💰 *TOTAL:* $${total} MXN\n\n` +
-                            `Tengo 6 HORAS para enviar mi comprobante. 🍀`;
-
+                            `Tengo 6 HORAS para pagar. (2h para bono). 🍀`;
                 window.top.location.href = `https://api.whatsapp.com/send?phone=529531024519&text=${encodeURIComponent(msj)}`;
             }, 1000);
         }
