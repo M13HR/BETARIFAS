@@ -7,50 +7,56 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #25d366; --gold: #ffd700; --apartado: #f39c12; --pagado: #e74c3c; --bg: #0a0a0a; --card: #161616; }
-        body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: white; margin: 0; padding: 10px; display: flex; justify-content: center; padding-bottom: 80px; /* Espacio para el botón flotante */ }
+        body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: white; margin: 0; padding: 10px; display: flex; justify-content: center; padding-bottom: 90px; }
         .app { width: 100%; max-width: 500px; background: var(--card); border-radius: 30px; border: 1px solid #333; overflow: hidden; text-align: center; }
         
+        /* HEADER Y HERO */
         .hero { background: linear-gradient(180deg, #1b4d2b 0%, #0a0a0a 100%); padding: 20px; border-bottom: 4px solid var(--primary); }
         .logo-img { width: 120px; margin-bottom: 10px; }
         .hero h1 { color: var(--gold); font-size: 24px; margin: 0; }
         .price-badge { background: var(--gold); color: black; display: inline-block; padding: 5px 15px; border-radius: 50px; font-weight: bold; margin-top: 10px; }
-        
         .promo-img { width: 90%; border-radius: 20px; margin: 15px auto; border: 1px solid #444; display: block; }
 
+        /* PREMIOS Y COMBOS */
         .premios { padding: 15px; background: #222; margin: 15px; border-radius: 15px; border: 1px dashed var(--gold); text-align: left; }
         .premio-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
         
-        /* MÁQUINA DE LA SUERTE FLEXIBLE */
-        .maquina-suerte-container { background: #222; margin: 15px; padding: 15px; border-radius: 15px; border: 1px solid #444; }
-        .maquina-suerte-container h3 { margin: 0 0 10px 0; color: var(--gold); font-size: 16px; }
-        .controles-suerte { display: flex; gap: 10px; justify-content: center; align-items: center; }
-        #cantidad-suerte { width: 60px; padding: 10px; border-radius: 8px; border: 1px solid #555; background: #000; color: white; text-align: center; font-size: 16px; }
-        .btn-suerte { background: var(--gold); color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .combos-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px; }
+        .combo-card { background: #111; padding: 12px 5px; border-radius: 12px; border: 1px solid #444; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .combo-card:active { transform: scale(0.95); background: #222; }
+        .combo-card.popular { border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+        .combo-card b { display: block; color: var(--primary); font-size: 16px; margin: 4px 0; }
+        .combo-card span { font-size: 10px; color: #fff; display: block; }
+        .combo-card small { font-size: 9px; color: var(--gold); font-weight: bold; text-transform: uppercase; }
+        .tag-popular { position: absolute; top: 0; right: 0; background: var(--gold); color: black; font-size: 7px; padding: 2px 5px; border-radius: 0 0 0 8px; }
 
+        /* MÁQUINA DE LA SUERTE MANUAL */
+        .maquina-manual { background: #222; margin: 15px; padding: 15px; border-radius: 15px; border: 1px solid #333; }
+        .maquina-manual h3 { margin: 0 0 10px 0; color: var(--gold); font-size: 15px; }
+        .controles { display: flex; gap: 10px; justify-content: center; }
+        #input-suerte { width: 60px; background: #000; color: white; border: 1px solid #555; border-radius: 8px; text-align: center; font-size: 16px; }
+        .btn-suerte-manual { background: var(--gold); color: black; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* CUADRÍCULA DE NÚMEROS */
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; height: 300px; overflow-y: auto; background: #000; padding: 15px; border-radius: 15px; margin: 15px; border: 1px solid #222; }
         .num { padding: 12px 0; background: #2a2a2a; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .num.selected { background: var(--primary) !important; color: black !important; transform: scale(1.05); }
-        .num.apartado { background: var(--apartado); color: white; cursor: not-allowed; }
-        .num.pagado { background: var(--pagado); color: white; cursor: not-allowed; opacity: 0.5; }
+        .num.selected { background: var(--primary) !important; color: black !important; box-shadow: 0 0 10px var(--primary); }
+        .num.apartado { background: var(--apartado); color: white; cursor: not-allowed; opacity: 0.6; }
+        .num.pagado { background: var(--pagado); color: white; cursor: not-allowed; opacity: 0.4; }
         
-        /* CONTADOR Y BOTÓN FLOTANTE */
-        .check-status { color: var(--primary); font-size: 14px; font-weight: bold; margin-top: 10px; }
-        .btn-apartar-flotante { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,200,83,0.5); z-index: 100; display: none; animation: popIn 0.3s ease; }
-        @keyframes popIn { from { transform: translateX(-50%) scale(0.5); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+        .status-bar { color: var(--primary); font-size: 14px; font-weight: bold; margin: 10px 0; }
 
-        /* SECCIÓN DE DATOS (OCULTA POR DEFECTO) */
-        #seccion-datos { display: none; padding: 20px; background: #1a1a1a; border-radius: 20px; margin: 15px; border: 1px solid #333; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        #seccion-datos h2 { color: var(--gold); font-size: 20px; margin-top: 0; }
-        
-        input, select { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; font-size: 16px; font-family: sans-serif; }
-        .btn-final { background: var(--primary); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* BOTÓN FLOTANTE */
+        .btn-flotante { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: black; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(0,255,0,0.4); z-index: 1000; display: none; }
 
-        /* SECCIÓN DE TRANSPARENCIA */
-        .metodo-ganador { background: #111; margin: 15px; padding: 15px; border-radius: 15px; border-left: 4px solid var(--gold); text-align: left; font-family: sans-serif; font-size: 13px; }
-        .metodo-ganador h4 { margin: 0 0 5px 0; color: var(--gold); font-size: 14px; }
+        /* FORMULARIO */
+        #seccion-datos { display: none; padding: 20px; background: #1a1a1a; border-radius: 20px; margin: 15px; border: 1px solid #333; }
+        input, select { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; font-size: 16px; }
+        .btn-enviar { background: var(--primary); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; }
 
-        .footer-info { font-family: sans-serif; font-size: 12px; color: #aaa; padding: 20px; text-align: left; line-height: 1.6; }
+        /* FOOTER DINÁMICA */
+        .dinamica { background: #111; margin: 15px; padding: 15px; border-radius: 15px; border-left: 4px solid var(--gold); text-align: left; font-size: 12px; line-height: 1.4; }
+        .footer-text { font-size: 11px; color: #777; padding: 20px; }
     </style>
 </head>
 <body>
@@ -65,53 +71,63 @@
 
         <div class="premios">
             <div class="premio-item"><span>🥇 <b>MAYOR</b></span><b style="color:var(--primary)">IPHONE 17 PRO MAX</b></div>
-            <div class="premio-item"><span>⚡ <b>PRE-EVENTO (50%)</b></span><b style="color:var(--gold)">$5,000 MXN</b></div>
+            <div class="premio-item"><span>⚡ <b>PRE-EVENTO</b></span><b style="color:var(--gold)">$5,000 MXN</b></div>
             <div class="premio-item"><span>🎁 <b>BONO PRONTO PAGO</b></span><b style="color:var(--primary)">$2,000 MXN</b></div>
-            <p style="font-size: 10px; color: #aaa; margin-top: 5px; text-align: center;">
-                ⚠️ Bono de $2,000 válido pagando en las primeras <b>2 HORAS</b>.
-            </p>
+            <p style="font-size: 9px; color: #888; margin-top: 8px; text-align: center;">*Bono de $2,000 aplica pagando en las primeras 2 horas.</p>
         </div>
 
-        <div class="maquina-suerte-container">
-            <h3>🎰 MÁQUINA DE LA SUERTE</h3>
-            <p style="font-size: 12px; color: #ccc; margin-bottom: 10px;">¿No sabes qué número elegir? ¡Dinos cuántos y nosotros los elegimos!</p>
-            <div class="controles-suerte">
-                <input type="number" id="cantidad-suerte" min="1" max="20" value="3">
-                <button class="btn-suerte" onclick="maquinaSuerte()">¡PROBAR SUERTE!</button>
+        <div class="combos-container">
+            <div class="combo-card" onclick="maquinaSuerte(1)">
+                <span>1 BOLETO</span><b>$75</b><small>🎰 SUERTE</small>
+            </div>
+            <div class="combo-card popular" onclick="maquinaSuerte(3)">
+                <div class="tag-popular">TOP</div>
+                <span>3 BOLETOS</span><b>$200</b><small>🔥 POPULAR</small>
+            </div>
+            <div class="combo-card" onclick="maquinaSuerte(5)">
+                <span>5 BOLETOS</span><b>$300</b><small>🚀 SÚPER</small>
             </div>
         </div>
 
-        <input type="number" id="search" placeholder="🔍 BUSCAR NÚMERO..." style="width:90%; margin:10px auto; padding: 12px; border-radius: 10px; background: #111; color: white; border: 1px solid #333;">
+        <div class="maquina-manual">
+            <h3>🎰 ELIGE TU CANTIDAD</h3>
+            <div class="controles">
+                <input type="number" id="input-suerte" min="1" max="50" value="10">
+                <button class="btn-suerte-manual" onclick="maquinaSuerte(null)">¡DAME SUERTE!</button>
+            </div>
+        </div>
+
+        <input type="number" id="search" placeholder="🔍 BUSCAR MI NÚMERO..." style="width:90%; margin:10px auto; padding: 12px; border-radius: 10px; background: #000; color: white; border: 1px solid #333;">
 
         <div id="grid" class="grid">Cargando boletos...</div>
-        <div class="check-status" id="contador-fijo">Boletos seleccionados: 0</div>
+        <div class="status-bar" id="contador">Boletos seleccionados: 0</div>
 
-        <button class="btn-apartar-flotante" id="btn-flotante" onclick="mostrarFormulario()">¡APARTAR AHORA! 🍀</button>
+        <button class="btn-flotante" id="btn-flotante" onclick="irAlFormulario()">APARTAR MI SUERTE 🍀</button>
 
         <div id="seccion-datos">
-            <h2>📝 REGISTRA TU APARTADO</h2>
-            <p id="msg-seleccion" style="color: var(--primary); text-align: center; font-weight: bold; margin-bottom: 15px;"></p>
+            <h2 style="color: var(--gold); font-size: 18px;">📝 DATOS DE APARTADO</h2>
+            <p id="resumen-seleccion" style="font-size: 14px; color: var(--primary); font-weight: bold; margin-bottom: 15px;"></p>
             
             <input type="text" id="nombre" placeholder="Nombre completo">
             <input type="number" id="whatsapp" placeholder="WhatsApp (10 dígitos)">
             
-            <input list="estadosLista" id="estadoRep" placeholder="Selecciona tu Estado">
-            <datalist id="estadosLista">
+            <input list="estados" id="estado" placeholder="Selecciona tu Estado">
+            <datalist id="estados">
                 <option value="Puebla"><option value="Oaxaca"><option value="CDMX"><option value="Veracruz"><option value="Guerrero">
             </datalist>
             
-            <input type="text" id="municipio" placeholder="¿De qué municipio nos visitas?">
-            <button id="btn-final" class="btn-final" onclick="enviar()">CONFIRMAR APARTADO 🐯</button>
+            <input type="text" id="municipio" placeholder="Municipio">
+            <button id="btn-final" class="btn-enviar" onclick="enviar()">CONFIRMAR APARTADO 🐯</button>
         </div>
 
-        <div class="metodo-ganador">
+        <div class="dinamica">
             <h4>🍀 DINÁMICA DEL GANADOR</h4>
-            El ganador se define con las <b>últimas 3 cifras</b> del Premio Mayor de la <b>Lotería Nacional</b> (Sorteo correspondiente al 14 de Abril). ¡Transparencia total!
+            Basado en las <b>últimas 3 cifras</b> del Premio Mayor de la <b>Lotería Nacional</b> (Sorteo 14 de Abril). ¡Transparencia garantizada!
         </div>
 
-        <div class="footer-info">
-            📍 <b>UBICACIÓN:</b> Acatlán de Osorio, Puebla.<br>
-            📅 <b>SORTEO:</b> 14 de Abril | ⏳ <b>PAGO:</b> 6 horas límite.
+        <div class="footer-text">
+            📍 Acatlán de Osorio, Puebla.<br>
+            ⏳ Tiempo límite de pago: 6 horas.
         </div>
     </div>
 
@@ -134,7 +150,7 @@
                     else { div.className = 'num'; div.onclick = () => togg(n, div); }
                     grid.appendChild(div);
                 }
-            } catch (e) { document.getElementById('grid').innerText = "Error de conexión."; }
+            } catch (e) { document.getElementById('grid').innerText = "Error al cargar números."; }
         }
 
         function togg(n, el) {
@@ -145,99 +161,82 @@
                 seleccionados.push(n); 
                 el.classList.add('selected'); 
             }
-            actualizarInterfaz();
+            actualizar();
         }
 
-        function maquinaSuerte() {
-            const cantidad = parseInt(document.getElementById('cantidad-suerte').value);
-            if(cantidad < 1) return alert("Elige al menos 1 número.");
-
-            // Sonido Casino
-            const context = new AudioContext();
-            const osc = context.createOscillator();
-            const gain = context.createGain();
-            osc.connect(gain); gain.connect(context.destination);
-            osc.frequency.value = 880; gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
-            osc.start(); osc.stop(context.currentTime + 0.5);
+        function maquinaSuerte(cant) {
+            const cantidad = cant || parseInt(document.getElementById('input-suerte').value);
+            if(cantidad < 1) return alert("Elige una cantidad válida.");
 
             const disponibles = Array.from(document.querySelectorAll('.num:not(.apartado):not(.pagado)'));
-            if (disponibles.length < cantidad) return alert("No hay suficientes números libres.");
-            
-            // Limpiar selección previa si quieres
-            // seleccionados = [];
-            // document.querySelectorAll('.num.selected').forEach(el => el.classList.remove('selected'));
+            if (disponibles.length < cantidad) return alert("No hay suficientes números.");
+
+            // Sonido
+            const audioCtx = new AudioContext();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.frequency.value = 880; gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
 
             for (let i = 0; i < cantidad; i++) {
-                const randomIdx = Math.floor(Math.random() * disponibles.length);
-                const el = disponibles.splice(randomIdx, 1)[0];
+                const idx = Math.floor(Math.random() * disponibles.length);
+                const el = disponibles.splice(idx, 1)[0];
                 const n = el.innerText;
-                el.classList.add('selected');
-                seleccionados.push(n);
+                if(!seleccionados.includes(n)) {
+                    el.classList.add('selected');
+                    seleccionados.push(n);
+                }
             }
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#25d366', '#ffd700'] });
-            actualizarInterfaz();
-            // Llevamos suavemente la vista a la cuadrícula para que vean qué se eligió
+            actualizar();
             document.getElementById('grid').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function actualizarInterfaz() {
-            const contadorFijo = document.getElementById('contador-fijo');
-            const btnFlotante = document.getElementById('btn-flotante');
-            
-            contadorFijo.innerText = `Boletos seleccionados: ${seleccionados.length}`;
-            
-            if(seleccionados.length > 0) {
-                btnFlotante.style.display = 'block';
-            } else {
-                btnFlotante.style.display = 'none';
-                document.getElementById('seccion-datos').style.display = 'none'; // Ocultar formulario si quitan números
-            }
+        function actualizar() {
+            const cont = document.getElementById('contador');
+            const flotante = document.getElementById('btn-flotante');
+            cont.innerText = `Boletos seleccionados: ${seleccionados.length}`;
+            flotante.style.display = seleccionados.length > 0 ? 'block' : 'none';
         }
 
-        function mostrarFormulario() {
-            const seccionDatos = document.getElementById('seccion-datos');
-            const msgSeleccion = document.getElementById('msg-seleccion');
-            
-            // Ocultamos el botón flotante para que no estorbe en el formulario
+        function irAlFormulario() {
+            const sec = document.getElementById('seccion-datos');
+            const res = document.getElementById('resumen-seleccion');
             document.getElementById('btn-flotante').style.display = 'none';
-            
-            // Mostramos el formulario y lo llenamos
-            seccionDatos.style.display = 'block';
-            msgSeleccion.innerText = `🎰 Llevas ${seleccionados.length} boletos (${seleccionados.join(', ')})`;
-            
-            // Scroll suave directo al formulario
-            seccionDatos.scrollIntoView({ behavior: 'smooth' });
+            sec.style.display = 'block';
+            res.innerText = `🐯 Llevas ${seleccionados.length} números: (${seleccionados.join(', ')})`;
+            sec.scrollIntoView({ behavior: 'smooth' });
         }
 
         async function enviar() {
             const n = document.getElementById('nombre').value;
             const w = document.getElementById('whatsapp').value;
-            const est = document.getElementById('estadoRep').value;
+            const est = document.getElementById('estado').value;
             const mun = document.getElementById('municipio').value;
 
-            if(!n || !w || !est || !mun) return alert("Por favor, llena todos tus datos.");
+            if(!n || !w || !est || !mun) return alert("Llena todos tus datos.");
             
-            const b = document.getElementById('btn-final');
-            b.innerText = "PROCESANDO..."; b.disabled = true;
+            const btn = document.getElementById('btn-final');
+            btn.innerText = "REGISTRANDO..."; btn.disabled = true;
 
             fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ nombre:n, whatsapp:w, boletos: seleccionados.join(', '), estadoRep: est, municipio: mun }) });
             
-            let total = seleccionados.length * 75; // Cálculo básico
-
             setTimeout(() => {
+                const total = seleccionados.length * 75; 
                 const msj = `📱 *RIFAS EL TECUAN* 🐯\n\n` +
                             `👤 *NOMBRE:* ${n}\n` +
                             `🔢 *BOLETOS:* ${seleccionados.join(', ')}\n` +
-                            `💰 *TOTAL:* $${total} MXN (Aprox.)\n\n` +
+                            `📍 *MUNICIPIO:* ${mun}, ${est}\n\n` +
                             `Tengo 6 HORAS para pagar. (2h para bono). 🍀`;
                 window.top.location.href = `https://api.whatsapp.com/send?phone=529531024519&text=${encodeURIComponent(msj)}`;
             }, 1000);
         }
 
         document.getElementById('search').oninput = function() {
-            let val = this.value.padStart(3, '0').slice(-3);
-            document.getElementById("n-"+val)?.scrollIntoView({behavior:'smooth', block:'center'});
+            let v = this.value.padStart(3, '0').slice(-3);
+            document.getElementById("n-"+v)?.scrollIntoView({behavior:'smooth', block:'center'});
         };
         cargar();
     </script>
