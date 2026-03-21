@@ -227,11 +227,20 @@
                 }) 
             });
             
-            setTimeout(() => {
-                // Cálculo de precios
-                let total = seleccionados.length * 75;
-                if(seleccionados.length === 3) total = 200;
-                if(seleccionados.length === 5) total = 300;
+          setTimeout(() => {
+                // NUEVA LÓGICA DE PRECIOS MEJORADA 🐯
+                let total = 0;
+                const cant = seleccionados.length;
+
+                if (cant === 3) {
+                    total = 200; // Combo especial 3
+                } else if (cant === 5) {
+                    total = 300; // Combo especial 5
+                } else if (cant >= 6) {
+                    total = cant * 60; // PRECIO MAYOREO $60 c/u
+                } else {
+                    total = cant * 75; // Precio normal $75 c/u
+                }
 
                 const msj = `📱 *RIFAS EL TECUAN* 🐯\n\n` +
                             `👤 *NOMBRE:* ${n}\n` +
