@@ -70,15 +70,23 @@
             <div class="combo-card" onclick="maquinaSuerte(5)"><span>5 BOLETOS</span><b>$300</b></div>
         </div>
 
-        <div onclick="maquinaSuerte(6)" style="background: rgba(37, 211, 102, 0.1); border: 2px dashed var(--primary); margin: 0 15px 15px 15px; padding: 10px; border-radius: 15px; cursor: pointer; animation: pulse 2s infinite;">
+        <div onclick="maquinaSuerte(6)" style="background: rgba(37, 211, 102, 0.1); border: 2px dashed var(--primary); margin: 0 15px 15px 15px; padding: 10px; border-radius: 15px; cursor: pointer;">
             <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🔥 ¡SÚPER PROMO MAYOREO! 🔥</span>
             <div style="font-size: 15px; color: white;">A partir de <b>6 boletos</b> cada uno a solo <b style="color:var(--primary); font-size: 18px;">$60</b></div>
-            <small style="font-size: 10px; color: #aaa;">(Toca aquí para que la máquina elija 6 por ti)</small>
+            <small style="font-size: 10px; color: #aaa;">(Toca aquí para llevarte 6 de una vez)</small>
         </div>
 
         <div id="carrito-lucky">
-            <div style="font-size: 12px; color: var(--gold);">✨ NÚMEROS ELEGIDOS ✨</div>
+            <div style="font-size: 12px; color: var(--gold);">✨ TUS NÚMEROS ✨</div>
             <div id="tags-contenedor" class="lucky-tags"></div>
+        </div>
+
+        <div class="maquina-manual">
+            <h3 style="font-size: 14px; margin-bottom: 8px; color: #eee;">🎰 ELIGE OTRA CANTIDAD</h3>
+            <div class="controles">
+                <input type="number" id="input-suerte" min="1" max="50" value="10">
+                <button class="btn-suerte-manual" onclick="maquinaSuerte(null)">DAME SUERTE</button>
+            </div>
         </div>
 
         <input type="number" id="search" placeholder="🔍 BUSCAR NÚMERO..." style="width:90%; margin:10px auto; padding: 12px; border-radius: 10px; background: #000; color: white; border: 1px solid #333;">
