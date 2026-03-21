@@ -7,8 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #25d366; --gold: #ffd700; --apartado: #f39c12; --pagado: #e74c3c; --bg: #0a0a0a; --card: #161616; }
-        body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: white; margin: 0; padding: 10px; display: flex; justify-content: center; }
-        .app { width: 100%; max-width: 500px; background: var(--card); border-radius: 30px; border: 1px solid #333; overflow: hidden; text-align: center; padding-bottom: 50px; }
+        body { font-family: 'Arial Black', sans-serif; background: var(--bg); color: white; margin: 0; padding: 10px; display: flex; justify-content: center; padding-bottom: 80px; /* Espacio para el botón flotante */ }
+        .app { width: 100%; max-width: 500px; background: var(--card); border-radius: 30px; border: 1px solid #333; overflow: hidden; text-align: center; }
         
         .hero { background: linear-gradient(180deg, #1b4d2b 0%, #0a0a0a 100%); padding: 20px; border-bottom: 4px solid var(--primary); }
         .logo-img { width: 120px; margin-bottom: 10px; }
@@ -20,24 +20,32 @@
         .premios { padding: 15px; background: #222; margin: 15px; border-radius: 15px; border: 1px dashed var(--gold); text-align: left; }
         .premio-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
         
-        .combos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px; }
-        .combo-box { background: #222; padding: 10px; border-radius: 12px; border: 1px solid #444; font-size: 11px; cursor: pointer; transition: 0.2s; }
-        .combo-box:active { transform: scale(0.95); background: #333; }
-        .combo-box b { display: block; color: var(--primary); font-size: 15px; }
-        .combo-box small { color: var(--gold); font-size: 9px; }
+        /* MÁQUINA DE LA SUERTE FLEXIBLE */
+        .maquina-suerte-container { background: #222; margin: 15px; padding: 15px; border-radius: 15px; border: 1px solid #444; }
+        .maquina-suerte-container h3 { margin: 0 0 10px 0; color: var(--gold); font-size: 16px; }
+        .controles-suerte { display: flex; gap: 10px; justify-content: center; align-items: center; }
+        #cantidad-suerte { width: 60px; padding: 10px; border-radius: 8px; border: 1px solid #555; background: #000; color: white; text-align: center; font-size: 16px; }
+        .btn-suerte { background: var(--gold); color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; height: 260px; overflow-y: auto; background: #000; padding: 15px; border-radius: 15px; margin: 15px; border: 1px solid #222; }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; height: 300px; overflow-y: auto; background: #000; padding: 15px; border-radius: 15px; margin: 15px; border: 1px solid #222; }
         .num { padding: 12px 0; background: #2a2a2a; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .num.selected { background: var(--primary) !important; color: black !important; }
+        .num.selected { background: var(--primary) !important; color: black !important; transform: scale(1.05); }
         .num.apartado { background: var(--apartado); color: white; cursor: not-allowed; }
         .num.pagado { background: var(--pagado); color: white; cursor: not-allowed; opacity: 0.5; }
         
-        #seccion-datos { display: none; padding: 0 15px; text-align: left; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* CONTADOR Y BOTÓN FLOTANTE */
+        .check-status { color: var(--primary); font-size: 14px; font-weight: bold; margin-top: 10px; }
+        .btn-apartar-flotante { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,200,83,0.5); z-index: 100; display: none; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: translateX(-50%) scale(0.5); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
 
-        input, select { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; font-size: 16px; }
-        .btn-apartar { background: var(--primary); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin: 10px 0; }
+        /* SECCIÓN DE DATOS (OCULTA POR DEFECTO) */
+        #seccion-datos { display: none; padding: 20px; background: #1a1a1a; border-radius: 20px; margin: 15px; border: 1px solid #333; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        #seccion-datos h2 { color: var(--gold); font-size: 20px; margin-top: 0; }
         
+        input, select { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; font-size: 16px; font-family: sans-serif; }
+        .btn-final { background: var(--primary); color: black; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
         /* SECCIÓN DE TRANSPARENCIA */
         .metodo-ganador { background: #111; margin: 15px; padding: 15px; border-radius: 15px; border-left: 4px solid var(--gold); text-align: left; font-family: sans-serif; font-size: 13px; }
         .metodo-ganador h4 { margin: 0 0 5px 0; color: var(--gold); font-size: 14px; }
@@ -64,26 +72,36 @@
             </p>
         </div>
 
-        <div class="combos">
-            <div class="combo-box" onclick="maquinaSuerte(1)">1 Boleto<b>$75</b><small>🎰 SUERTE</small></div>
-            <div class="combo-box" style="border-color:var(--gold)" onclick="maquinaSuerte(3)">3 Boletos<b>$200</b><small>🔥 POPULAR</small></div>
-            <div class="combo-box" onclick="maquinaSuerte(5)">5 Boletos<b>$300</b><small>🚀 SÚPER</small></div>
+        <div class="maquina-suerte-container">
+            <h3>🎰 MÁQUINA DE LA SUERTE</h3>
+            <p style="font-size: 12px; color: #ccc; margin-bottom: 10px;">¿No sabes qué número elegir? ¡Dinos cuántos y nosotros los elegimos!</p>
+            <div class="controles-suerte">
+                <input type="number" id="cantidad-suerte" min="1" max="20" value="3">
+                <button class="btn-suerte" onclick="maquinaSuerte()">¡PROBAR SUERTE!</button>
+            </div>
         </div>
 
         <input type="number" id="search" placeholder="🔍 BUSCAR NÚMERO..." style="width:90%; margin:10px auto; padding: 12px; border-radius: 10px; background: #111; color: white; border: 1px solid #333;">
 
         <div id="grid" class="grid">Cargando boletos...</div>
+        <div class="check-status" id="contador-fijo">Boletos seleccionados: 0</div>
+
+        <button class="btn-apartar-flotante" id="btn-flotante" onclick="mostrarFormulario()">¡APARTAR AHORA! 🍀</button>
 
         <div id="seccion-datos">
-            <div id="msg-seleccion" style="color: var(--primary); text-align: center; font-weight: bold; margin-bottom: 10px;"></div>
+            <h2>📝 REGISTRA TU APARTADO</h2>
+            <p id="msg-seleccion" style="color: var(--primary); text-align: center; font-weight: bold; margin-bottom: 15px;"></p>
+            
             <input type="text" id="nombre" placeholder="Nombre completo">
             <input type="number" id="whatsapp" placeholder="WhatsApp (10 dígitos)">
+            
             <input list="estadosLista" id="estadoRep" placeholder="Selecciona tu Estado">
             <datalist id="estadosLista">
                 <option value="Puebla"><option value="Oaxaca"><option value="CDMX"><option value="Veracruz"><option value="Guerrero">
             </datalist>
+            
             <input type="text" id="municipio" placeholder="¿De qué municipio nos visitas?">
-            <button id="btn" class="btn-apartar" onclick="enviar()">¡APARTAR MI SUERTE! 🍀</button>
+            <button id="btn-final" class="btn-final" onclick="enviar()">CONFIRMAR APARTADO 🐯</button>
         </div>
 
         <div class="metodo-ganador">
@@ -130,7 +148,11 @@
             actualizarInterfaz();
         }
 
-        function maquinaSuerte(cantidad) {
+        function maquinaSuerte() {
+            const cantidad = parseInt(document.getElementById('cantidad-suerte').value);
+            if(cantidad < 1) return alert("Elige al menos 1 número.");
+
+            // Sonido Casino
             const context = new AudioContext();
             const osc = context.createOscillator();
             const gain = context.createGain();
@@ -139,10 +161,11 @@
             osc.start(); osc.stop(context.currentTime + 0.5);
 
             const disponibles = Array.from(document.querySelectorAll('.num:not(.apartado):not(.pagado)'));
-            if (disponibles.length < cantidad) return alert("No hay suficientes números.");
+            if (disponibles.length < cantidad) return alert("No hay suficientes números libres.");
             
-            seleccionados = [];
-            document.querySelectorAll('.num.selected').forEach(el => el.classList.remove('selected'));
+            // Limpiar selección previa si quieres
+            // seleccionados = [];
+            // document.querySelectorAll('.num.selected').forEach(el => el.classList.remove('selected'));
 
             for (let i = 0; i < cantidad; i++) {
                 const randomIdx = Math.floor(Math.random() * disponibles.length);
@@ -154,16 +177,37 @@
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#25d366', '#ffd700'] });
             actualizarInterfaz();
-            document.getElementById('seccion-datos').scrollIntoView({ behavior: 'smooth' });
+            // Llevamos suavemente la vista a la cuadrícula para que vean qué se eligió
+            document.getElementById('grid').scrollIntoView({ behavior: 'smooth' });
         }
 
         function actualizarInterfaz() {
-            const seccion = document.getElementById('seccion-datos');
-            const msg = document.getElementById('msg-seleccion');
+            const contadorFijo = document.getElementById('contador-fijo');
+            const btnFlotante = document.getElementById('btn-flotante');
+            
+            contadorFijo.innerText = `Boletos seleccionados: ${seleccionados.length}`;
+            
             if(seleccionados.length > 0) {
-                seccion.style.display = 'block';
-                msg.innerText = `🎰 Llevas: ${seleccionados.length} números (${seleccionados.join(', ')})`;
-            } else { seccion.style.display = 'none'; }
+                btnFlotante.style.display = 'block';
+            } else {
+                btnFlotante.style.display = 'none';
+                document.getElementById('seccion-datos').style.display = 'none'; // Ocultar formulario si quitan números
+            }
+        }
+
+        function mostrarFormulario() {
+            const seccionDatos = document.getElementById('seccion-datos');
+            const msgSeleccion = document.getElementById('msg-seleccion');
+            
+            // Ocultamos el botón flotante para que no estorbe en el formulario
+            document.getElementById('btn-flotante').style.display = 'none';
+            
+            // Mostramos el formulario y lo llenamos
+            seccionDatos.style.display = 'block';
+            msgSeleccion.innerText = `🎰 Llevas ${seleccionados.length} boletos (${seleccionados.join(', ')})`;
+            
+            // Scroll suave directo al formulario
+            seccionDatos.scrollIntoView({ behavior: 'smooth' });
         }
 
         async function enviar() {
@@ -172,22 +216,20 @@
             const est = document.getElementById('estadoRep').value;
             const mun = document.getElementById('municipio').value;
 
-            if(!n || !w || !est || !mun) return alert("Llena tus datos.");
+            if(!n || !w || !est || !mun) return alert("Por favor, llena todos tus datos.");
             
-            const b = document.getElementById('btn');
+            const b = document.getElementById('btn-final');
             b.innerText = "PROCESANDO..."; b.disabled = true;
 
             fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ nombre:n, whatsapp:w, boletos: seleccionados.join(', '), estadoRep: est, municipio: mun }) });
             
-            let total = seleccionados.length * 75;
-            if(seleccionados.length === 3) total = 200;
-            if(seleccionados.length === 5) total = 300;
+            let total = seleccionados.length * 75; // Cálculo básico
 
             setTimeout(() => {
                 const msj = `📱 *RIFAS EL TECUAN* 🐯\n\n` +
                             `👤 *NOMBRE:* ${n}\n` +
                             `🔢 *BOLETOS:* ${seleccionados.join(', ')}\n` +
-                            `💰 *TOTAL:* $${total} MXN\n\n` +
+                            `💰 *TOTAL:* $${total} MXN (Aprox.)\n\n` +
                             `Tengo 6 HORAS para pagar. (2h para bono). 🍀`;
                 window.top.location.href = `https://api.whatsapp.com/send?phone=529531024519&text=${encodeURIComponent(msj)}`;
             }, 1000);
